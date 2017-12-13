@@ -1,0 +1,38 @@
+# See https://hub.docker.com/r/dataiku/dss/ for configuration options.
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  labels:
+    component: crs-dataiku-dss-4p1
+  name: crs-dataiku-dss-4p1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: crs-assortment
+        component: crs-dataiku-dss
+    spec:
+      containers:
+      - image: gcr.io/retailcatalyst-187519/crs-dataiku:4.1.0
+        name: dataiku-dss-4p1
+        env:
+        - name: DSS_DATADIR
+          value: /var/dataiku/data
+        ports:
+        - containerPort: 10000
+        volumeMounts:
+        - name: dss-persistent-storage
+          # mount path within the container
+          mountPath: /var/dataiku/data
+        imagePullPolicy: Always
+      volumes:
+      - name: dss-persistent-storage
+        # hostPath:
+        #   # directory location on host
+        #   path: /data
+        #   #this field is optional
+        #   type: Directory
+        gcePersistentDisk:
+          pdName: tier1-dss-disk1
+          fsType: ext4

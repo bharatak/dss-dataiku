@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    component: crs-dataiku-dss-4p1
+  name: crs-dataiku-dss-4p1
+spec:
+  ports: [
+    {
+      "name": "dataiku-dss",
+      "protocol": "TCP",
+      "port": 10000,
+      "targetPort": 10000
+    }
+  ]
+  selector:
+    app: crs-assortment
+    component: crs-dataiku-dss
+  type: LoadBalancer
